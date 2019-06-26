@@ -1,3 +1,6 @@
+*{
+  box-sizing: border-box;
+}
 .App {
   background: #283c86;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #45a247, #283c86);  /* Chrome 10-25, Safari 5.1-6 */
@@ -5,10 +8,41 @@
   height: 100vh;
 }
 .header {
-  font-size:40px;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  background:rgba(255,255,255,0.35);
-  color:white;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  font-size: 40px;
+  font-family: helvetica;
+  background: rgba(255,255,255,0.25);
+  color: white;
   padding: 20px 32px;
   border-bottom: 2px solid white;
+}
+.logo{
+  height: 42px;
+  margin-right: 24px;
+}
+.text-input{
+  position:absolute;
+  bottom:0;
+  height:40px;
+  width:100%;
+  border-top:2px solid white;
+  display:flex;
+  align-items: center;
+}
+.text-input input {
+  width:calc(100% - 50px);
+  height:90%;
+  font-size:24px;
+}
+.text-input button {
+  width: 50px;
+  height:90%;
+  border-radius:20px;
+  cursor:pointer;
+}
+.text-input button:hover {
+  background:teal;
+  color:white;
 }
