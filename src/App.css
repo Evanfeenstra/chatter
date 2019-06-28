@@ -31,18 +31,20 @@
   display:flex;
   align-items: center;
 }
+/* comment */
 .text-input input {
   width:calc(100% - 50px);
-  height:90%;
+  height:100%;
   font-size:24px;
+  padding-left:10px;
+  outline:none;
 }
 .text-input button {
-  width: 50px;
-  height:90%;
+  height:100%;
+  width:50px;
   border-radius:20px;
-  cursor:pointer;
 }
 .text-input button:hover {
-  background:teal;
   color:white;
+  background:teal;
 }
