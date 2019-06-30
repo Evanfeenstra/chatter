@@ -33,16 +33,32 @@
 }
 /* comment */
 .text-input input {
-  width:calc(100% - 50px);
-  height:100%;
-  font-size:24px;
-  padding-left:10px;
+  width:calc(100% - 10px);
+  height:31px;
+  color:white;
+  border:1px solid white;
+  border-radius:14px;
+  position:absolute;
+  right:5px;
+  background:#1f1e2e;
+  padding-left:12px;
+  padding-bottom:2px;
+  padding-right:28px;
+  font-size:16px;
   outline:none;
 }
 .text-input button {
-  height:100%;
-  width:50px;
-  border-radius:20px;
+  position:absolute;
+  top:6px;
+  right:7px;
+  border-radius:100%;
+  width:27px;
+  height:27px;
+  border:1px solid white;
+  background:white;
+  padding: 4px 2px;
+  cursor: pointer;
+  outline:none;
 }
 .text-input button:hover {
   color:white;
