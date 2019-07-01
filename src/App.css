@@ -56,11 +56,20 @@
   height:27px;
   border:1px solid white;
   background:white;
-  padding: 4px 2px;
+  padding: 5px 2px;
   cursor: pointer;
   outline:none;
 }
 .text-input button:hover {
   color:white;
   background:teal;
+}
+.text-input button[disabled] {
+  background:grey;
+  color:white;
+  cursor:default;
+}
+.text-input button svg {
+  height:14px;
+  width:14px;
 }
