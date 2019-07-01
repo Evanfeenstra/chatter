@@ -32,7 +32,7 @@
   align-items: center;
 }
 /* comment */
-.text-input input {
+.text-input > input {
   width:calc(100% - 10px);
   height:31px;
   color:white;
@@ -47,7 +47,7 @@
   font-size:16px;
   outline:none;
 }
-.text-input button {
+.text-input > button {
   position:absolute;
   top:6px;
   right:7px;
@@ -60,16 +60,14 @@
   cursor: pointer;
   outline:none;
 }
-.text-input button:hover {
+.text-input > button:hover {
   color:white;
   background:teal;
 }
-.text-input button[disabled] {
-  background:grey;
+.text-input > button[disabled] {
   color:white;
+  background:grey;
   cursor:default;
 }
-.text-input button svg {
-  height:14px;
-  width:14px;
-}
+
+
