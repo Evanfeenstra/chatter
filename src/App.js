@@ -6,7 +6,9 @@ import TextInput from './TextInput'
 class App extends React.Component {
 
   state={
-    messages:['hello','hi']
+    messages:['hello','hi'],
+    name:'',
+    editName:false,
   }
 
   sendMessage = (m) => {
@@ -21,17 +23,8 @@ class App extends React.Component {
         <header className="header">
           <img src={coolpic} className="logo" alt="logo" />
           Chatter
-      </header>
-      <TextInput sendMessage={this.sendMessage} />
-      <main>
-        {this.state.messages.map(m=>{
-          return <div className="bubble-wrap">
-            <div className="bubble">
-              <div>{m}</div>
-            </div>
-          </div>
-        })}
-      </main>
+        </header>
+        <TextInput sendMessage={this.sendMessage} />
       </div>
     );
   }
