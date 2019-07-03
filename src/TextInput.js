@@ -7,7 +7,7 @@ class TextInput extends React.Component {
     text:"",
   }
 
-  send = () => {
+  send = (e) => {
     this.props.sendMessage(this.state.text)
     this.setState({text:""})
   }
@@ -19,13 +19,14 @@ class TextInput extends React.Component {
   }
 
   render(){
+    var {text} = this.state
     return(<div className="text-input">
-      <input value={this.state.text} 
+      <input value={text}
         placeholder="Write your message here..."
         onChange={e=> this.setState({text: e.target.value})}
         onKeyPress={this.keyPress}
       />
-      <button disabled={!this.state.text} onClick={this.send}>
+      <button disabled={!text} onClick={this.send}>
         <FiSend style={{height:15,width:15}} />
       </button>
     </div>)

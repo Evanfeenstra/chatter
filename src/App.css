@@ -70,18 +70,22 @@
   cursor:default;
 }
 
+
+
+
+
+
+
+
+
 .bubble-wrap{
   width:100%;
-  padding:12px 20px 5px 20px;
+  padding:8px 20px;
   display:flex;
-  flex-direction:row;
-  align-items:center;
-  flex-shrink:0;
   position: relative;
 }
 .bubble-wrap[from="me"] {
   flex-direction:row-reverse;
-  padding:5px 20px;
 }
 .bubble{
   border-radius:11px;
@@ -113,7 +117,7 @@
   top:0;left:0;right:0;bottom:0;
   border-radius:10px;
 }
-.bubble > div {
+.bubble > span {
   color:white;
   position:relative;
   z-index:101;
@@ -121,7 +125,7 @@
 .bubble-name{
   position: absolute;
   color: white;
-  top: -1px;
+  top: -5px;
   font-size:10px;
   left: 30px;
 }
