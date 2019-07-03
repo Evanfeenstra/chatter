@@ -2,11 +2,14 @@ import React from 'react'
 import './App.css'
 import coolpic from './logo.png'
 import TextInput from './TextInput'
+import NamePicker from './NamePicker'
 
 class App extends React.Component {
 
   state = {
-    messages:['hi there!','hello'],
+    messages:[],
+    name:'',
+    editName:false,
   }
 
   gotMessage = (text) => {
@@ -19,8 +22,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="header">
-          <img src={coolpic} className="logo" alt="logo" />
-          Chatter
+          <div>
+            <img src={coolpic} className="logo" alt="logo" />
+            Chatter
+          </div>
+          <NamePicker />
         </header>
         <main className="messages">
           {messages.map((m,i)=>{

@@ -10,6 +10,7 @@
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-direction: row;
   font-size: 40px;
   font-family: helvetica;
@@ -70,13 +71,11 @@
   cursor:default;
 }
 
-
-
-
-
-
-
-
+.messages{
+  overflow:auto;
+  height:calc(100% - 128px);
+  padding-top:10px;
+}
 
 .bubble-wrap{
   width:100%;
