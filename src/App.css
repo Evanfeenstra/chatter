@@ -118,6 +118,14 @@
   position:relative;
   z-index:101;
 }
+.bubble-name{
+  position: absolute;
+  color: white;
+  top: -1px;
+  font-size:10px;
+  left: 30px;
+}
+
 .edit-username{
   display: flex;
   align-items: center;
@@ -150,11 +158,4 @@
   align-items: center;
   margin-right:12px;
   font-size:16px;
-}
-.bubble-name{
-  position: absolute;
-  color: white;
-  top: -1px;
-  font-size:10px;
-  left: 30px;
 }
