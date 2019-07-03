@@ -7,8 +7,6 @@ class App extends React.Component {
 
   state={
     messages:['hello','hi'],
-    name:'',
-    editName:false,
   }
 
   sendMessage = (m) => {
