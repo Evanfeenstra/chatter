@@ -13,12 +13,16 @@ class App extends React.Component {
   }
 
   gotMessage = (text) => {
-    var newMessagesArray = [...this.state.messages, text]
+    var message = {
+      text,
+      from: this.state.name
+    }
+    var newMessagesArray = [message, ...this.state.messages]
     this.setState({messages: newMessagesArray})
   }
 
   render() {
-    var {messages} = this.state
+    var {editName, messages, name} = this.state
     return (
       <div className="App">
         <header className="header">
@@ -26,13 +30,19 @@ class App extends React.Component {
             <img src={coolpic} className="logo" alt="logo" />
             Chatter
           </div>
-          <NamePicker />
+          <NamePicker 
+            name={name}
+            editName={editName}
+            changeName={name=> this.setState({name})}
+            setEditName={()=> this.setState({editName: !editName})}
+          />
         </header>
         <main className="messages">
           {messages.map((m,i)=>{
             return (<div key={i} className="bubble-wrap">
+              <div className="bubble-name">{m.from}</div>
               <div className="bubble">
-                <span>{m}</span>
+                <span>{m.text}</span>
               </div>
             </div>)
           })}

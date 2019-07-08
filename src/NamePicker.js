@@ -1,7 +1,7 @@
 import React from 'react'
 import {FiEdit} from 'react-icons/fi'
 
-function NamePicker({ name, editName, changeName, setEditName }) {
+function NamePicker({ setEditName, name, editName, changeName }) {
   if (editName) {
     return (<div className="edit-username">
       <input value={name} className="name-input"
