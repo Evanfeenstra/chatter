@@ -3,6 +3,9 @@ import './App.css'
 import coolpic from './logo.png'
 import TextInput from './TextInput'
 import NamePicker from './NamePicker'
+import * as firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/storage"
 
 class App extends React.Component {
 
@@ -12,6 +15,49 @@ class App extends React.Component {
     editName:false,
   }
 
+  componentWillMount(){
+    var name = localStorage.getItem('name')
+    if(name){
+      this.setState({name})
+    }
+
+    /* <=========================> */
+    firebase.initializeApp({
+      apiKey: "AIzaSyBAJVwrP5J4AhVKd5ijYtcTF9XMV6tIcY4",
+      authDomain: "msgr-2.firebaseapp.com",
+      projectId: "msgr-2",
+      storageBucket: "msgr-2.appspot.com",
+    });
+    
+    this.db = firebase.firestore();
+
+    this.db.collection("messages").onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          //console.log(change.doc.data())
+          this.receive(change.doc.data())
+        }
+      })
+    })
+    /* <=========================> */
+  }
+
+  /* <===========================> */
+  receive = (m) => {
+    const messages = [m, ...this.state.messages]
+    messages.sort((a,b)=>b.ts-a.ts)
+    this.setState({messages})
+  }
+
+  send = (m) => {
+    this.db.collection("messages").add({
+      ...m,
+      from: this.state.name || 'No name',
+      ts: Date.now()
+    })
+  }
+  /* <===========================> */
+
   gotMessage = (text) => {
     var message = {
       text,
@@ -19,6 +65,13 @@ class App extends React.Component {
     }
     var newMessagesArray = [message, ...this.state.messages]
     this.setState({messages: newMessagesArray})
+  }
+
+  setEditName = (editName) => {
+    if(!editName){
+      localStorage.setItem('name', this.state.name)
+    }
+    this.setState({editName})
   }
 
   render() {
@@ -30,11 +83,11 @@ class App extends React.Component {
             <img src={coolpic} className="logo" alt="logo" />
             Chatter
           </div>
-          <NamePicker 
+          <NamePicker
             name={name}
             editName={editName}
             changeName={name=> this.setState({name})}
-            setEditName={()=> this.setState({editName: !editName})}
+            setEditName={this.setEditName}
           />
         </header>
         <main className="messages">
