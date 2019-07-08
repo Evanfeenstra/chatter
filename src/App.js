@@ -39,8 +39,10 @@ class App extends React.Component {
         </header>
         <main className="messages">
           {messages.map((m,i)=>{
-            return (<div key={i} className="bubble-wrap">
-              <div className="bubble-name">{m.from}</div>
+            return (<div key={i} className="bubble-wrap" 
+                from={m.from===name ? "me" : "you"}
+              >
+              {m.from!==name && <div className="bubble-name">{m.from}</div>}
               <div className="bubble">
                 <span>{m.text}</span>
               </div>

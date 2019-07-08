@@ -72,6 +72,7 @@
 }
 
 .messages{
+  display: flex;
   overflow:auto;
   height:calc(100% - 132px);
   padding-top:10px;
