@@ -3,8 +3,8 @@ import './App.css'
 import coolpic from './logo.png'
 import TextInput from './TextInput'
 import NamePicker from './NamePicker'
-import * as firebase from "firebase/app";
-import "firebase/firestore";
+import * as firebase from "firebase/app"
+import "firebase/firestore"
 import "firebase/storage"
 
 class App extends React.Component {
@@ -58,15 +58,6 @@ class App extends React.Component {
   }
   /* <===========================> */
 
-  gotMessage = (text) => {
-    var message = {
-      text,
-      from: this.state.name
-    }
-    var newMessagesArray = [message, ...this.state.messages]
-    this.setState({messages: newMessagesArray})
-  }
-
   setEditName = (editName) => {
     if(!editName){
       localStorage.setItem('name', this.state.name)
@@ -102,7 +93,7 @@ class App extends React.Component {
             </div>)
           })}
         </main>
-        <TextInput sendMessage={this.gotMessage} />
+        <TextInput sendMessage={text=> this.send({text})} />
       </div>
     )
   }
