@@ -6,6 +6,7 @@ import NamePicker from './NamePicker'
 import * as firebase from "firebase/app"
 import "firebase/firestore"
 import "firebase/storage"
+import Camera from 'react-snap-pic'
 
 class App extends React.Component {
 
@@ -13,6 +14,7 @@ class App extends React.Component {
     messages:[],
     name:'',
     editName:false,
+    showCamera:false
   }
 
   componentWillMount(){
@@ -23,10 +25,10 @@ class App extends React.Component {
 
     /* <=========================> */
     firebase.initializeApp({
-      apiKey: "AIzaSyBAJVwrP5J4AhVKd5ijYtcTF9XMV6tIcY4",
-      authDomain: "msgr-2.firebaseapp.com",
-      projectId: "msgr-2",
-      storageBucket: "msgr-2.appspot.com",
+      apiKey: "AIzaSyDe5hejNin_uspcktTCkhfQAhbWMIARuy0",
+      authDomain: "chatterrrrrrr.firebaseapp.com",
+      projectId: "chatterrrrrrr",
+      storageBucket: "chatterrrrrrr.appspot.com",
     });
     
     this.db = firebase.firestore();
@@ -65,10 +67,16 @@ class App extends React.Component {
     this.setState({editName})
   }
 
+  takePicture = (img) => {
+    console.log(img)
+    this.setState({showCamera:false})
+  }
+
   render() {
-    var {editName, messages, name} = this.state
+    var {editName, messages, name, showCamera} = this.state
     return (
       <div className="App">
+        {showCamera && <Camera takePicture={this.takePicture} />}
         <header className="header">
           <div>
             <img src={coolpic} className="logo" alt="logo" />
@@ -83,20 +91,75 @@ class App extends React.Component {
         </header>
         <main className="messages">
           {messages.map((m,i)=>{
-            return (<div key={i} className="bubble-wrap" 
-                from={m.from===name ? "me" : "you"}
-              >
-              {m.from!==name && <div className="bubble-name">{m.from}</div>}
-              <div className="bubble">
-                <span>{m.text}</span>
-              </div>
-            </div>)
+            return <Message key={i} m={m} name={name} />
           })}
         </main>
-        <TextInput sendMessage={text=> this.send({text})} />
+        <TextInput sendMessage={text=> this.send({text})} 
+          showCamera={()=>this.setState({showCamera:true})}
+        />
       </div>
     )
   }
 }
 
 export default App;
+
+function Message(props) {
+  var {m, name} = props
+  return (<div className="bubble-wrap" 
+    from={m.from===name ? "me" : "you"}
+  >
+    {m.from!==name && <div className="bubble-name">{m.from}</div>}
+    <div className="bubble">
+      <span>{m.text}</span>
+    </div>
+  </div>)
+}
+
+
+
+
+
+
+
+class Counter extends React.Component {
+
+  state = {count: 0}
+
+  componentDidMount(){
+    var countString = localStorage.getItem('count')
+    this.setState({count: parseInt(countString)})
+  }
+
+  setTheCount = (count) => {
+    localStorage.setItem('count', count)
+    this.setState({count})
+  }
+
+  render(){
+    const {count} = this.state
+    return (<div>
+      <ShowCount count={count} color="black"
+        howMuchToChangeBy={1}
+        setCount={this.setTheCount}
+      />
+      <ShowCount count={0-count} 
+        color={0-count > 0 ? "blue" : "red"}
+        howMuchToChangeBy={-1}
+        setCount={this.setTheCount}
+      />
+    </div>)
+  }
+}
+
+function ShowCount(props) {
+  console.log(props.count)
+  const {count, setCount, color, howMuchToChangeBy} = props
+  return (<div style={{fontSize:200,color}}
+    onClick={()=>setCount(count+howMuchToChangeBy)}>
+    {count}
+  </div>)
+}
+
+
+//export default Counter

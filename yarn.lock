@@ -8367,6 +8367,11 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
+react-snap-pic@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-snap-pic/-/react-snap-pic-0.0.2.tgz#f192be85962319b8f6415f1f0c73ee11b4b39c20"
+  integrity sha512-y47KWOLw6vKm5/E6IIiqiWTCGRZfTumTDch3Spr6mzMWe6IrfW0kbskxar58OQxnkYwJ6w7HdKKBJmAPEUPV6Q==
+
 react@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"

@@ -34,7 +34,7 @@
 }
 /* comment */
 .text-input > input {
-  width:calc(100% - 10px);
+  width:calc(100% - 50px);
   height:31px;
   color:white;
   border:1px solid white;
