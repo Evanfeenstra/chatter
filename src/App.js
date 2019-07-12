@@ -7,6 +7,7 @@ import * as firebase from "firebase/app"
 import "firebase/firestore"
 import "firebase/storage"
 import Camera from 'react-snap-pic'
+import Div100vh from 'react-div-100vh'
 
 class App extends React.Component {
 
@@ -67,20 +68,24 @@ class App extends React.Component {
     this.setState({editName})
   }
 
-  takePicture = (img) => {
-    console.log(img)
+  takePicture = async (img) => {
     this.setState({showCamera:false})
+    const imgID = Math.random().toString(36).substring(7);
+    var storageRef = firebase.storage().ref();
+    var ref = storageRef.child(imgID+'.jpg');
+    await ref.putString(img, 'data_url')
+    this.send({img: imgID})
   }
 
   render() {
     var {editName, messages, name, showCamera} = this.state
     return (
-      <div className="App">
+      <Div100vh className="App">
         {showCamera && <Camera takePicture={this.takePicture} />}
         <header className="header">
-          <div>
+          <div style={{display:'flex',alignItems:'center'}}>
             <img src={coolpic} className="logo" alt="logo" />
-            Chatter
+            {editName ? '' : 'Chatter'}
           </div>
           <NamePicker
             name={name}
@@ -97,13 +102,15 @@ class App extends React.Component {
         <TextInput sendMessage={text=> this.send({text})} 
           showCamera={()=>this.setState({showCamera:true})}
         />
-      </div>
+      </Div100vh>
     )
   }
 }
 
 export default App;
 
+const bucket = 'https://firebasestorage.googleapis.com/v0/b/chatterrrrrrr.appspot.com/o/'
+const suffix = '.jpg?alt=media'
 function Message(props) {
   var {m, name} = props
   return (<div className="bubble-wrap" 
@@ -112,6 +119,7 @@ function Message(props) {
     {m.from!==name && <div className="bubble-name">{m.from}</div>}
     <div className="bubble">
       <span>{m.text}</span>
+      {m.img && <img alt="pic" src={bucket+m.img+suffix} />}
     </div>
   </div>)
 }

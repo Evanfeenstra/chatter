@@ -5,26 +5,26 @@
   background: #283c86;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #45a247, #283c86);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #45a247, #283c86); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  height: 100vh;
 }
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
-  font-size: 40px;
+  font-size: 3rem;
   font-family: helvetica;
   background: rgba(255,255,255,0.25);
   color: white;
   padding: 20px 32px;
   border-bottom: 2px solid white;
+  max-height: 85px;
 }
 .logo{
   height: 42px;
-  margin-right: 24px;
+  margin-right: 1.5rem;
 }
 .text-input{
-  position:absolute;
+  position:fixed;
   bottom:0;
   height:40px;
   width:100%;
@@ -74,7 +74,7 @@
 .messages{
   display: flex;
   overflow:auto;
-  height:calc(100% - 132px);
+  height:calc(100% - 125px);
   padding-top:10px;
   flex-direction: column-reverse;
 }
@@ -84,6 +84,7 @@
   padding:8px 20px;
   display:flex;
   position: relative;
+  flex-shrink:0;
 }
 .bubble-wrap[from="me"] {
   flex-direction:row-reverse;
@@ -122,6 +123,10 @@
   color:white;
   position:relative;
   z-index:101;
+}
+.bubble img {
+  position: relative;
+  z-index: 101;
 }
 .bubble-name{
   position: absolute;
@@ -162,5 +167,5 @@
   display: flex;
   align-items: center;
   margin-right:12px;
-  font-size:16px;
+  font-size:1rem;
 }
