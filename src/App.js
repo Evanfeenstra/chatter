@@ -81,7 +81,6 @@ class App extends React.Component {
     var {editName, messages, name, showCamera} = this.state
     return (
       <Div100vh className="App">
-        {showCamera && <Camera takePicture={this.takePicture} />}
         <header className="header">
           <div style={{display:'flex',alignItems:'center'}}>
             <img src={coolpic} className="logo" alt="logo" />
@@ -102,10 +101,12 @@ class App extends React.Component {
         <TextInput sendMessage={text=> this.send({text})} 
           showCamera={()=>this.setState({showCamera:true})}
         />
+        {showCamera && <Camera takePicture={this.takePicture} />}
       </Div100vh>
     )
-  }
-}
+  } // end render()
+
+} // end App component
 
 export default App;
 
@@ -123,7 +124,6 @@ function Message(props) {
     </div>
   </div>)
 }
-
 
 
 
@@ -171,3 +171,15 @@ function ShowCount(props) {
 
 
 //export default Counter
+
+
+
+class Test extends React.Component {
+  render(){
+    return <div className="test">
+      
+    </div>
+  }
+}
+
+// export default Test
