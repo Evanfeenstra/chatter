@@ -12,16 +12,16 @@ import Div100vh from 'react-div-100vh'
 class App extends React.Component {
 
   state = {
-    messages:[],
-    name:'',
-    editName:false,
-    showCamera:false
+    messages: [],
+    name: '',
+    editName: false,
+    showCamera: false,
   }
 
-  componentWillMount(){
+  componentWillMount() {
     var name = localStorage.getItem('name')
-    if(name){
-      this.setState({name})
+    if (name) {
+      this.setState({ name })
     }
 
     /* <=========================> */
@@ -31,25 +31,35 @@ class App extends React.Component {
       projectId: "chatterrrrrrr",
       storageBucket: "chatterrrrrrr.appspot.com",
     });
-    
+
     this.db = firebase.firestore();
 
     this.db.collection("messages").onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
           //console.log(change.doc.data())
-          this.receive(change.doc.data())
+          this.receive({
+            ...change.doc.data(),
+            id: change.doc.id
+          })
+        }
+        if (change.type === 'removed') {
+          this.remove(change.doc.id)
         }
       })
     })
-    /* <=========================> */
+  } // end componentWillMount
+
+  remove = (id) => {
+    var msgs = [...this.state.messages]
+    var messages = msgs.filter(m => m.id !== id)
+    this.setState({ messages })
   }
 
-  /* <===========================> */
   receive = (m) => {
     const messages = [m, ...this.state.messages]
-    messages.sort((a,b)=>b.ts-a.ts)
-    this.setState({messages})
+    messages.sort((a, b) => b.ts - a.ts)
+    this.setState({ messages })
   }
 
   send = (m) => {
@@ -62,44 +72,50 @@ class App extends React.Component {
   /* <===========================> */
 
   setEditName = (editName) => {
-    if(!editName){
+    if (!editName) {
       localStorage.setItem('name', this.state.name)
     }
-    this.setState({editName})
+    this.setState({ editName })
   }
 
   takePicture = async (img) => {
-    this.setState({showCamera:false})
+    this.setState({ showCamera: false })
     const imgID = Math.random().toString(36).substring(7);
     var storageRef = firebase.storage().ref();
-    var ref = storageRef.child(imgID+'.jpg');
+    var ref = storageRef.child(imgID + '.jpg');
     await ref.putString(img, 'data_url')
-    this.send({img: imgID})
+    this.send({ img: imgID })
   }
 
   render() {
-    var {editName, messages, name, showCamera} = this.state
+    var { editName, messages, name, showCamera } = this.state
     return (
       <Div100vh className="App">
         <header className="header">
-          <div style={{display:'flex',alignItems:'center'}}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <img src={coolpic} className="logo" alt="logo" />
             {editName ? '' : 'Chatter'}
           </div>
           <NamePicker
             name={name}
             editName={editName}
-            changeName={name=> this.setState({name})}
+            changeName={name => this.setState({ name })}
             setEditName={this.setEditName}
           />
         </header>
         <main className="messages">
-          {messages.map((m,i)=>{
-            return <Message key={i} m={m} name={name} />
+          {messages.map((m, i) => {
+            return (<Message key={i} m={m} name={name}
+              onClick={() => {
+                if (name === m.from || name === 'Evan') {
+                  this.db.collection('messages').doc(m.id).delete()
+                }
+              }}
+            />)
           })}
         </main>
-        <TextInput sendMessage={text=> this.send({text})} 
-          showCamera={()=>this.setState({showCamera:true})}
+        <TextInput sendMessage={text => this.send({ text })}
+          showCamera={() => this.setState({ showCamera: true })}
         />
         {showCamera && <Camera takePicture={this.takePicture} />}
       </Div100vh>
@@ -113,14 +129,15 @@ export default App;
 const bucket = 'https://firebasestorage.googleapis.com/v0/b/chatterrrrrrr.appspot.com/o/'
 const suffix = '.jpg?alt=media'
 function Message(props) {
-  var {m, name} = props
-  return (<div className="bubble-wrap" 
-    from={m.from===name ? "me" : "you"}
+  var { m, name, onClick } = props
+  return (<div className="bubble-wrap"
+    from={m.from === name ? "me" : "you"}
+    onClick={onClick}
   >
-    {m.from!==name && <div className="bubble-name">{m.from}</div>}
+    {m.from !== name && <div className="bubble-name">{m.from}</div>}
     <div className="bubble">
       <span>{m.text}</span>
-      {m.img && <img alt="pic" src={bucket+m.img+suffix} />}
+      {m.img && <img alt="pic" src={bucket + m.img + suffix} />}
     </div>
   </div>)
 }
@@ -132,27 +149,27 @@ function Message(props) {
 
 class Counter extends React.Component {
 
-  state = {count: 0}
+  state = { count: 0 }
 
-  componentDidMount(){
+  componentDidMount() {
     var countString = localStorage.getItem('count')
-    this.setState({count: parseInt(countString)})
+    this.setState({ count: parseInt(countString) })
   }
 
   setTheCount = (count) => {
     localStorage.setItem('count', count)
-    this.setState({count})
+    this.setState({ count })
   }
 
-  render(){
-    const {count} = this.state
+  render() {
+    const { count } = this.state
     return (<div>
       <ShowCount count={count} color="black"
         howMuchToChangeBy={1}
         setCount={this.setTheCount}
       />
-      <ShowCount count={0-count} 
-        color={0-count > 0 ? "blue" : "red"}
+      <ShowCount count={0 - count}
+        color={0 - count > 0 ? "blue" : "red"}
         howMuchToChangeBy={-1}
         setCount={this.setTheCount}
       />
@@ -162,9 +179,9 @@ class Counter extends React.Component {
 
 function ShowCount(props) {
   console.log(props.count)
-  const {count, setCount, color, howMuchToChangeBy} = props
-  return (<div style={{fontSize:200,color}}
-    onClick={()=>setCount(count+howMuchToChangeBy)}>
+  const { count, setCount, color, howMuchToChangeBy } = props
+  return (<div style={{ fontSize: 200, color }}
+    onClick={() => setCount(count + howMuchToChangeBy)}>
     {count}
   </div>)
 }
@@ -175,9 +192,9 @@ function ShowCount(props) {
 
 
 class Test extends React.Component {
-  render(){
+  render() {
     return <div className="test">
-      
+
     </div>
   }
 }
