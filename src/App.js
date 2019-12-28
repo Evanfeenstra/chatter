@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import './App.css'
 import coolpic from './logo.png'
 import TextInput from './TextInput'
@@ -8,123 +8,140 @@ import "firebase/firestore"
 import "firebase/storage"
 import Camera from 'react-snap-pic'
 import Div100vh from 'react-div-100vh'
+import { BrowserRouter, Route } from "react-router-dom";
 
-class App extends React.Component {
+function App() {
+  useEffect(()=>{
+    const pathname = window.location.pathname
+    if(pathname.length<2){
+      window.location.pathname = Math.random().toString(36).slice(7)
+    }
+  },[])
+  return (<BrowserRouter>
+    <Route path="/:page" component={Content} />
+  </BrowserRouter>)
+} // end App component
 
-  state = {
-    messages: [],
-    name: '',
-    editName: false,
-    showCamera: false,
+export default App;
+
+let db
+
+function initFirebase(){
+  firebase.initializeApp({
+    apiKey: "AIzaSyDe5hejNin_uspcktTCkhfQAhbWMIARuy0",
+    authDomain: "chatterrrrrrr.firebaseapp.com",
+    projectId: "chatterrrrrrr",
+    storageBucket: "chatterrrrrrr.appspot.com",
+  });
+  db = firebase.firestore();
+}
+
+function Content(props){
+  const page = props.match.params.page
+
+  const [messages, setMessages] = useState([])
+  const [showCamera, setShowCamera] = useState(false)
+  const [name, setName] = useState('')
+  const [editName, setEditName] = useState(false)
+
+  function remove(id) {
+    setMessages(current=> {
+      var msgs = current.filter(m => m.id !== id)
+      return msgs
+    })
   }
 
-  componentWillMount() {
+  function receive(m) {
+    setMessages(current=> {
+      const msgs = [m, ...current]
+      msgs.sort((a, b) => b.ts - a.ts)
+      return msgs
+    })
+  }
+
+  function send(m) {
+    db.collection("messages").add({
+      ...m,
+      from: name || 'No name',
+      ts: Date.now(),
+      page: page,
+    })
+  }
+
+  function changeEditName(editName) {
+    if (!editName) {
+      localStorage.setItem('name', name)
+    }
+    setEditName(editName)
+  }
+
+  async function takePicture (img) {
+    setShowCamera(false)
+    const imgID = Math.random().toString(36).substring(7);
+    var storageRef = firebase.storage().ref();
+    var ref = storageRef.child(imgID + '.jpg');
+    await ref.putString(img, 'data_url')
+    send({ img: imgID })
+  }
+
+  function deleteMessage(m) {
+    if (name === m.from || name === 'Evan') {
+      db.collection('messages').doc(m.id).delete()
+    }
+  }
+  
+  useEffect(()=>{
     var name = localStorage.getItem('name')
     if (name) {
-      this.setState({ name })
+      setName(name)
     }
 
-    /* <=========================> */
-    firebase.initializeApp({
-      apiKey: "AIzaSyDe5hejNin_uspcktTCkhfQAhbWMIARuy0",
-      authDomain: "chatterrrrrrr.firebaseapp.com",
-      projectId: "chatterrrrrrr",
-      storageBucket: "chatterrrrrrr.appspot.com",
-    });
-
-    this.db = firebase.firestore();
-
-    this.db.collection("messages").onSnapshot((snapshot) => {
+    initFirebase()
+    db.collection("messages").where('page','==',page)
+      .onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
-          //console.log(change.doc.data())
-          this.receive({
+          // console.log(change.doc.data())
+          receive({
             ...change.doc.data(),
             id: change.doc.id
           })
         }
         if (change.type === 'removed') {
-          this.remove(change.doc.id)
+          remove(change.doc.id)
         }
       })
     })
-  } // end componentWillMount
+  },[])
 
-  remove = (id) => {
-    var msgs = [...this.state.messages]
-    var messages = msgs.filter(m => m.id !== id)
-    this.setState({ messages })
-  }
-
-  receive = (m) => {
-    const messages = [m, ...this.state.messages]
-    messages.sort((a, b) => b.ts - a.ts)
-    this.setState({ messages })
-  }
-
-  send = (m) => {
-    this.db.collection("messages").add({
-      ...m,
-      from: this.state.name || 'No name',
-      ts: Date.now()
-    })
-  }
-  /* <===========================> */
-
-  setEditName = (editName) => {
-    if (!editName) {
-      localStorage.setItem('name', this.state.name)
-    }
-    this.setState({ editName })
-  }
-
-  takePicture = async (img) => {
-    this.setState({ showCamera: false })
-    const imgID = Math.random().toString(36).substring(7);
-    var storageRef = firebase.storage().ref();
-    var ref = storageRef.child(imgID + '.jpg');
-    await ref.putString(img, 'data_url')
-    this.send({ img: imgID })
-  }
-
-  render() {
-    var { editName, messages, name, showCamera } = this.state
-    return (
-      <Div100vh className="App">
-        <header className="header">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={coolpic} className="logo" alt="logo" />
-            {editName ? '' : 'Chatter'}
-          </div>
-          <NamePicker
-            name={name}
-            editName={editName}
-            changeName={name => this.setState({ name })}
-            setEditName={this.setEditName}
-          />
-        </header>
-        <main className="messages">
-          {messages.map((m, i) => {
-            return (<Message key={i} m={m} name={name}
-              onClick={() => {
-                if (name === m.from || name === 'Evan') {
-                  this.db.collection('messages').doc(m.id).delete()
-                }
-              }}
-            />)
-          })}
-        </main>
-        <TextInput sendMessage={text => this.send({ text })}
-          showCamera={() => this.setState({ showCamera: true })}
-        />
-        {showCamera && <Camera takePicture={this.takePicture} />}
-      </Div100vh>
-    )
-  } // end render()
-
-} // end App component
-
-export default App;
+  return <Div100vh className="App">
+    <header className="header">
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <img src={coolpic} className="logo" alt="logo" />
+        {editName ? '' : 'Chatter'}
+        <div className="page-name">{page}</div>
+      </div>
+      <NamePicker
+        name={name}
+        editName={editName}
+        changeName={name=> setName(name)}
+        changeEditName={changeEditName}
+      />
+    </header>
+    <main className="messages">
+      {messages.map((m, i) => {
+        return (<Message key={i} m={m} name={name}
+          onClick={()=> deleteMessage(m)}
+        />)
+      })}
+    </main>
+    <TextInput 
+      sendMessage={text => send({ text })}
+      showCamera={() => setShowCamera(true)}
+    />
+    {showCamera && <Camera takePicture={takePicture} />}
+  </Div100vh>
+}
 
 const bucket = 'https://firebasestorage.googleapis.com/v0/b/chatterrrrrrr.appspot.com/o/'
 const suffix = '.jpg?alt=media'

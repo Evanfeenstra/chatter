@@ -23,6 +23,14 @@
   height: 42px;
   margin-right: 1.5rem;
 }
+.page-name{
+  font-size:18px;
+  margin-left:24px;
+  border:1px solid white;
+  border-radius:6px;
+  padding:5px 8px;
+  background:rgba(255,255,255,0.1);
+}
 .text-input{
   position:fixed;
   bottom:0;
