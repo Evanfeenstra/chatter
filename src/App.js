@@ -10,7 +10,7 @@ import Camera from 'react-snap-pic'
 import Div100vh from 'react-div-100vh'
 import { BrowserRouter, Route } from "react-router-dom";
 
-function App() {
+function ASDF() {
   useEffect(()=>{
     const pathname = window.location.pathname
     if(pathname.length<2){
@@ -206,14 +206,3 @@ function ShowCount(props) {
 
 //export default Counter
 
-
-
-class Test extends React.Component {
-  render() {
-    return <div className="test">
-
-    </div>
-  }
-}
-
-// export default Test
